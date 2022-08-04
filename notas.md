@@ -133,3 +133,31 @@ Al hacer esto, en la Consola vamos a ver la respuesta de la API. Puntualmente, l
                 console.log(res.data);
             })
 [*]Si por alguna razón, yo enviara datos erróneos a la API, Axios me devolvería un error por pantalla directamente (401); la promesa fue rechazada. Por eso es tan importancia la parte de las validaciones, porque si nosotros permitimos que se haga el llamado a la API sin ellas, es muy probable que nuestra app estalle en mil pedazos.
+
+>>
+>>
+
+## MANEJO DE ERRORES (SWEET ALERT)
+Vamos a implementarle una capa adicional que nos permita visualizar los errores que nos vamos encontrando en la validación de una manera más amistosa. Para eso, vamos a implementar la librería Sweet Alert.
+
+**MANEJO DE ERRORES**
+El manejo de errores es crucial para la UX porque nos permite anunciarle al usuario que ha sucedido algo. Nosotros veníamos trabajando los errores desde la Consola, pero no es algo que los usuarios corrientes consulten. 
+
+**SWEET ALERT**
+Es una librería que nos permite hacer componentes alertas más bonitos. Lo que creas son elementos modales, los antiguos pop-ups que ahora se conocen como modal-boxs. 
+    *Instalación*: 
+        -npm install sweetalert (en la Terminal)
+        -https://sweetalert.js.org/guides/ > Using with libraries (Using React) > SweetAlert with React (Install) > Copy:
+            > npm i @sweetalert/with-react 
+    *Importar la librería*:
+        -+ > Using with libraries (Using React) > Copy: import swal from '@sweetalert/with-react'
+        -En la variable [swal] ya tengo mi componente para hacer las Sweet Alert. Puedo cambiarle el nombre (swAlert)
+    *Implementación*: 
+        -Cada vez que quiera lanzar una alerta voy a tener que llamar al componente swAlert como una función. Dentro de la función utilizo código .js:
+         > swAlert(
+            <h2>Esto es una ALERTA</h2>
+           );
+        -Dentro del swAlert puedo poner lo que quiera. Puedo armar un div y a ese header agregarle un párrafo con recomendaciones, aclaraciones, etc.
+        -Reemplazo los console.log que había generado en las Validaciones del formulario por swAlerts con los mismos mensajes que comunicaba por Consola, para que se comuniquen por pantalla. También implemento swAlert para avisar que está todo bien cuando la API me devuelva el token. 
+    *Decoración*
+    En la página (https://sweetalert.js.org/docs/) podemos adentrarnos en las distintas posibilidades que me ofrece la librería para poder implementar colores, animaciones, etc.
