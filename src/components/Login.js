@@ -39,6 +39,8 @@ function Login(){
                     <h2>Perfecto! Ingresaste correctamente</h2>
                 );
                 console.log(res.data);
+                const tokenRecibido = res.data.token;
+                localStorage.setItem('token', tokenRecibido);
             })
     }
 

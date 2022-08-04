@@ -161,3 +161,29 @@ Es una librería que nos permite hacer componentes alertas más bonitos. Lo que 
         -Reemplazo los console.log que había generado en las Validaciones del formulario por swAlerts con los mismos mensajes que comunicaba por Consola, para que se comuniquen por pantalla. También implemento swAlert para avisar que está todo bien cuando la API me devuelva el token. 
     *Decoración*
     En la página (https://sweetalert.js.org/docs/) podemos adentrarnos en las distintas posibilidades que me ofrece la librería para poder implementar colores, animaciones, etc.
+
+>>
+>>
+
+## PERSISTENCIA DEL TOKEN
+Cuando nosotros ponemos nuestro usuario o correo electrónico y contraseña, la API nos devuelve un Token. En los sistemas normales, esto significa que efectivamente mandamos la info correcta que estaba esperando el servidor y el servidor, en consecuencia, nos envió el token. Para que persista, tenemos que guardarlo; de esta manera evitamos que el usuario tenga que estar enviando constantemente la info de logueo.
+
+**TOKEN**
+Es un identificador del correcto inicio de la sesión; como viene "encriptado", es bastante difícil saber quién fue el que se logueó, sus datos, etc. Es algo que le sirve al servidor para poder saber exactamente quién se logueó y a nosotros como usuarios nos va a permitir que, una vez logueados, podamos hacer peticiones desde nuestra sesión. 
+    *¿Dónde lo veo?*: Usando console.log(res.data) dentro de mi función axios.then, voy a poder imprimir en la Consola el token que me envíe la API, si mi inicio de sesión es correcto.
+    *Guardar*: Voy a guardar el Token en el almacenamiento local del navegador. [Existen otros caminos para guardar el Token, como puede ser un almacenamiento global que maneje los estados]. Para esto tenemos 2 opciones:
+    [1] -Guardo en una constante el token: 
+          const tokenRecibido = res.data.token;
+        -Luego, almaceno el token en el navegador. Para eso, llamo al localStorage y seteo un ítem dentro, enviándole los 2 argumentos que pide: nombre de la propiedad bajo el cual quiero guardar la info y la info que quiero guardar (la constante en la que guarde el Token):
+          localStorage.setItem('token', tokenRecibido)
+    *Chequear*: Para verificar que el Token fue guardado correctamente, desde la Consola ingreso: loalStorage y presiono Enter; debería aparecerme el Token. Una vez que lo tengo guardado en el localStorage, lo voy a poder utilizar desde cualquier componente desde el que esté trabajando.
+    *Acceder*: Vamos a poder acceder al Token a través del método .getItem, pasándole como argumento solo el nombre de la propiedad que seteé en el .setItem (en este caso 'token'). Esto lo puedo hacer por Consola directamente:
+      localStorage.getItem('token');
+    *Borrar*: Lo que yo guardo en el storage queda ahí hasta que lo elimine. Para resetear, borrar, el storage: 
+      localStorage.clear();
+Este Token lo vamos a usar más adelante; cuando querramos validar si la persona esta logueada, vamos a preguntar si lo tenemos en nuestro almacenamiento local. Si no se hubiese logueado la persona, la consulta: localStorage.getItem('token'); me va dar como respuesta: null.
+
+**ALMACENAMIENTO LOCAL**
+    -Local Storage. Es un almacenamiento que el navegador nos provee para guardar información. Es un objeto que ya existe, no lo tengo que crear, simplemente lo llamo: localStorage. Como tal, tiene un montón de propiedades.
+    -Puedo acceder a él a través de la Consola, ingresando localStorage.
+    -Local Storage solamente almacena datos string; o sea que si yo tengo un array o un objeto, necesito pasarlo primero a un string. Esto lo puedo hacer a través de stringFAY??????. Lo mismo cuando obtengo algo que se guarda como stringDEFAY???, para poder trabajarlo voy a necesitar convertirlo en el objeto o array o lo que sea.
