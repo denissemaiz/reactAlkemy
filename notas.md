@@ -176,7 +176,7 @@ Es un identificador del correcto inicio de la sesión; como viene "encriptado", 
           const tokenRecibido = res.data.token;
         -Luego, almaceno el token en el navegador. Para eso, llamo al localStorage y seteo un ítem dentro, enviándole los 2 argumentos que pide: nombre de la propiedad bajo el cual quiero guardar la info y la info que quiero guardar (la constante en la que guarde el Token):
           localStorage.setItem('token', tokenRecibido)
-    *Chequear*: Para verificar que el Token fue guardado correctamente, desde la Consola ingreso: loalStorage y presiono Enter; debería aparecerme el Token. Una vez que lo tengo guardado en el localStorage, lo voy a poder utilizar desde cualquier componente desde el que esté trabajando.
+    *Chequear*: Para verificar que el Token fue guardado correctamente, desde la Consola ingreso: localStorage y presiono Enter; debería aparecerme el Token. Una vez que lo tengo guardado en el localStorage, lo voy a poder utilizar desde cualquier componente desde el que esté trabajando.
     *Acceder*: Vamos a poder acceder al Token a través del método .getItem, pasándole como argumento solo el nombre de la propiedad que seteé en el .setItem (en este caso 'token'). Esto lo puedo hacer por Consola directamente:
       localStorage.getItem('token');
     *Borrar*: Lo que yo guardo en el storage queda ahí hasta que lo elimine. Para resetear, borrar, el storage: 
@@ -187,3 +187,75 @@ Este Token lo vamos a usar más adelante; cuando querramos validar si la persona
     -Local Storage. Es un almacenamiento que el navegador nos provee para guardar información. Es un objeto que ya existe, no lo tengo que crear, simplemente lo llamo: localStorage. Como tal, tiene un montón de propiedades.
     -Puedo acceder a él a través de la Consola, ingresando localStorage.
     -Local Storage solamente almacena datos string; o sea que si yo tengo un array o un objeto, necesito pasarlo primero a un string. Esto lo puedo hacer a través de stringFAY??????. Lo mismo cuando obtengo algo que se guarda como stringDEFAY???, para poder trabajarlo voy a necesitar convertirlo en el objeto o array o lo que sea.
+
+>>
+>>
+
+## REDIRECCIÓN AL COMPONENTE LISTADO
+Una vez logueados, el servidor debería redireccionarme al listado de películas.
+
+**REACT ROUTER DOM**
+https://reactrouter.com/ El dom es el que está especificamente diseñado para el ámbito web. 
+Para instalarlo: npm install react-router-dom (si no funciona, le agrego --force).
+Luego, para poder utilizarlo, me voy a dirigir a index.js y voy a importar el comonente browser de la librería: 
+   import { BrowserRouter } from 'react-router-dom';
+Una vez importado, voy a utilizar este componente para encapsular al componente App, anidándolo:
+   <React.StrictMode>
+    <BrowserRouter>
+      <App />   
+    </BrowserRouter>
+   </React.StrictMode>
+Lo que me va a permitir esta librería es comenzar a gestionar todo lo que se conoce como el Simple Page Application; para poder ingresar a una ruta y otra.
+En el archivo App.js vamos a empezar a definir cuáles componentes se van a cargar dependiendo la ruta. Para esto, necesitamos importar 2 componentes de React Router Dom:
+  import { Routes, Route } from 'react-route-dom';
+El Routes (ex Switch) servirá como un switcher que, dependiendo la ruta que haya en la barra de direcciones, cargará un componente u otro. El Route me va a permitir definir cuál es elcomponente que quiero cargar.
+
+**COMPONENTE LISTADO**
+[1] Creo un componente Listado.js; armo dentro una función con su respectivo export:
+    function Listado(){
+        return (
+            <h2>Soy el componente Listado</h2>
+        )
+    }
+    export default Listado;
+[2] Importo el componente desde el archivo App.js:
+    import Listado from './components/Listado';
+[3] Como lo que yo quiero es que por un lado se cargue el componente Login.js y por el otro el componente Listado.js, lo que debo utilizar es el componente Routes que me provee la librería React Router Dom. Lo llamo dentro del return y me voy a traer dentro de este todos los componentes que quiera renderizar (Login y Listado). Para esto último, tengo que utilizar el componente Route; con este lo que hago es enviar dos propiedades: el path (cuando se cargará el componente) y el element (ex component; el componente que se cargará):
+    <Routes>
+        <Route exact path="/" element={<Login />} />
+        <Route path="/listado" element={<Listado />} />
+    </Routes>
+[*] En el caso del Login, voy a querer que se cargue cuando yo estoy en la raíz de la url, para simbolizar esto debo indicar: exact path="/". Le agregamos el exact para que no me traiga esta página cada vez que detecte la url + / (o sea todo el tiempo) sino que me la traiga cuando esta sea exactamente eso, sin nada después. 
+    *Redirección*: La redirección hacia el componente listado (ahora ruta listado) la voy a querer hacer cuando el usuario se loguee (correctamente, habiendo pasado todas las intancias de validación); o sea una vez que se haya guardado el token. Para esto voy a tener que trabajar sobre el archivo Login.js
+    [1] Lo que necesito es realizar una redirección, pero desde la barra de direcciones. Para esto, el React Router Dom trae un hook que se conoce como el useNavigate y que me va a permitir hacer cosas como estas redirecciones:
+        import { useNavigate } from 'react-router-dom';
+    [2] Como es un hook, lo siguiente que tengo que hacer es guardar el useNavigate en una variable:
+        const history = useNavigate();
+    [3] Una vez que se haya completado el sistema de logueo, después de la línea en la que guardaba el token en el localStorage, voy a pedir, usando la variable history, que me redirija al componente /listado:
+        history('/listado');
+    [*] La importancia del token radica, justamente, en que yo no debería poder acceder/ver este componente Listado.js si no logré generarlo. De esta manera lo protejo. Para que esto funcione así, debo agregar en mi componente Listado.js algo que verifique la info que tengo en localStorage:
+        [1] Creo una variable token desde la cual levanto la info del localStorage que había guardado como 'token': 
+            const token= localStorage.getItem('token'); 
+        [2] Lo que quiero es verificar si tengo o no el token; y si no lo tengo voy a necesitar otra redirección; por eso tengo que importar el useNavigate también en Listado.js:
+            import { useNavigate } from 'react-router-dom';
+            function Listado(){
+            const history = useNavigate();
+            ...
+        [3] Debo preguntar si el token es null; en caso de que lo sea, redirijo al usuario al Login:
+            if(token === null){
+                history('/');
+            }
+            [*] Para que esto efectivamente funcione, tengo que agregarle el hook useEffect de React. Este recibe un callback (dentro del callback puedo hacer lo que yo quiera) y un array vacío, para que solo se ejecute una vez:
+                import { useEffect } from 'react';
+                useEffect(() => {} <!-- callback -->, [] <!-- array vacío -->);
+        [4] Finalmente, enlazo esos 2 últimos paso y debería quedar así:
+            useEffect(() => {
+                const token= localStorage.getItem('token');
+                    if(token === null){
+                        history('/');
+                    }
+            }, []);
+
+>>El useEffect es un componente de React que nos permite hacer cosas cuando un componente "se monta" y para estar >>pendientes de qué es lo que sucede cuando este componente se renderiza en pantalla
+
+## LAALLA

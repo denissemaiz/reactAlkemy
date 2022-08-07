@@ -1,7 +1,10 @@
 import axios from 'axios';
 import swAlert from '@sweetalert/with-react';
+import { useNavigate } from 'react-router-dom';
 
 function Login(){
+
+    const history = useNavigate();
 
     const submitHandler = e => {
         e.preventDefault();
@@ -41,6 +44,7 @@ function Login(){
                 console.log(res.data);
                 const tokenRecibido = res.data.token;
                 localStorage.setItem('token', tokenRecibido);
+                history('/listado');
             })
     }
 
