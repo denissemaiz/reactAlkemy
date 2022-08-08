@@ -33,6 +33,8 @@ Puedo desde ya agregar una carpeta a [src] llamada "components"
 >>SI ESCRIBO EN UN ARCHIVO .js ABAJO A LA DERECHA ME APARECE Javascript SI LO APRIETO PUEDO ELEGIR
 >>EL LENGUAGE MODE Y PONER Jvascript React PARA QUE ME SUGIERA CÓDIGO COMO EN .jsx
 
+# UNIDAD 2: ARMADO DEL LOGIN
+
 ## ARMADO DEL COMPONENTE LOGIN
 
 El componente Login es un formulario que sirve para que la gente pueda ingresar a una página. Para sumarlo al código, vamos a crear un nuevo archivo en la carpeta /components con nombre Login.js. Para poder visualizarlo en pantalla, además del export al final de este archivo, voy a tener que hacer un import desde App.js 
@@ -258,4 +260,28 @@ El Routes (ex Switch) servirá como un switcher que, dependiendo la ruta que hay
 
 >>El useEffect es un componente de React que nos permite hacer cosas cuando un componente "se monta" y para estar >>pendientes de qué es lo que sucede cuando este componente se renderiza en pantalla
 
-## LAALLA
+# UNIDAD 3: DISEÑO DE LA ESTRUCTURA BÁSICA
+
+## ARMADO DEL ENCABEZADO Y LA NAVEGACIÓN
+Al momento tengo 2 rutas en mi app: ruta raíz (que me está renderizando el login) y la ruta /listado (que me mostrará el listado de cosas)
+
+**COMPONENTE HEADER**
+-Creo un componente Header.js y creo la clásica función con su respectivo return y export
+-Dentro del return, desarrollo la barra de navegación con HTML
+
+**ELEMENTOS HTML PARA BARRA DE NAVEGACIÓN**
+-Toda barra de navegación está constituida por enlaces; es un listado de enlaces. Por lo tanto necesitaremos:
+    [1] Etiqueta <header />: encabezado
+    [2] Etiqueta <nav />: la utilizo para definir una sección de una página cuyo propósito es proporcionar enlaces de navegación, ya sea dentro del documento actual o a otros documentos
+    [3] Etiqueta <ul />: la utilizo para definir una lista "desordenada"
+    [4] Etiqueta <li />: la utilizo para crear los distintos elementos, ítems, de la lista
+
+**COMPONENTES REACT ROUTER**
+-Dentro de una app de React, no podemos utilizar enlaces como los utilizábamos en HTML porque nos encontramos trabajando con una SPA (Simple Page Application). Si usamos la sintáxis de HTML vamos a lograr que se refresque toda la app
+-Voy a utilizar un componente que nos da React Router (que es la librería que nos permite hacer todo el sistema de ruteo de una app de React) llamado Link:
+    import { Link } from 'react-router-dom';
+-El componente Link se comporta como un enlace, como una etiqueta <a /> de HTML (de hecho, cuando lo veamos renderizado en el HTML nos vamos a dar cuenta que es una etiqueta a). Pero lo que nos va a permitir es que no se refresque la página:
+    <Link to="/">Home</Link>
+    [*] Es muy parecida a la sintáxis de <a />, pero reemplazo esta etiqueta por <Link /> y el href="" por to=""
+
+

@@ -16,30 +16,30 @@ function Login(){
 
         if(email === ''|| password === ''){
             swAlert(
-                <h2>Los campos no pueden estar vacíos</h2>
+                { text: "Los campos no pueden estar vacíos", icon: "error" }
             );
             return;
         }
 
         if(email !== '' && !regexEmail.test(email)){
             swAlert(
-                <h2>El correo electrónico ingresado no es una dirección válida</h2>
+                { text: "El correo electrónico ingresado no es una dirección válida", icon: "error" }
             );
             return;
         }
 
         if(email !== 'challenge@alkemy.org' || password !== 'react'){
             swAlert(
-                <h2>El email o la contraseña no coinciden con un usuario válido</h2>
+                { text: "El email o la contraseña no coinciden con un usuario válido", icon: "error"}
             );
             return;
         }
 
         axios
             .post('http://challenge-react.alkemy.org', { email, password })
-            .then (res =>{
+            .then ((res) =>{
                 swAlert(
-                    <h2>Perfecto! Ingresaste correctamente</h2>
+                    { icon: "success" }
                 );
                 console.log(res.data);
                 const tokenRecibido = res.data.token;
