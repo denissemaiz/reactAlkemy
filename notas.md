@@ -284,4 +284,25 @@ Al momento tengo 2 rutas en mi app: ruta raíz (que me está renderizando el log
     <Link to="/">Home</Link>
     [*] Es muy parecida a la sintáxis de <a />, pero reemplazo esta etiqueta por <Link /> y el href="" por to=""
 
+>>
+>>
+
+## ARMADO DEL PIE DE PÁGINA
+
+**FOOTER**
+Es la parte final de un sitio web. Se ha dejado un poco de lado porque no se le presta tanta atención. Sin embargo, es una buena herramienta para poner cosas interesantes como pueden ser los enlaces a nuestras redes sociales, enlaces de navegación de nuestra página, etc
+    *Componente Footer.js*:
+    -Creo un componente Footer.js y creo la clásica función con su respectivo return y export
+    -Dentro del return, desarrollo el footer con HTML
+
+**ELEMENTOS HTML PARA FOOTER**
+    [1] Etiqueta <footer />: pie de página 
+    [2] Etiqueta <nav />: la utilizo para definir una sección de una página cuyo propósito es proporcionar enlaces de navegación, ya sea dentro del documento actual o a otros documentos
+    [3] Etiqueta <ul />: la utilizo para definir una lista "desordenada"
+    [4] Etiqueta <li />: la utilizo para crear los distintos elementos, ítems, de la lista
+    [5] Etiqueta <a />: la utilizo para generar enlaces a redes sociales o páginas que no sean particularmente de esta app; enlace tradicional
+        [*] Siempre que usemos los enlaces tradicionales que nos lleven a una página distinta a la de mi app, React recomienda implementar el atributo [rel=""] y los valores: "noopener noreferrer". Con esto decimos que es un enlace que no nos importa hacerle seguimiento ni nada; es decir, evitamos que los enlaces estén como corruptos y te lleven a un lado que no es el especificado
+    [6] Etiqueta <p />: para poner el Copyright o cualquier texto
+
+
 

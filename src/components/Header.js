@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 
 function Header(){
     return(
-        <header>
+        <footer>
             <nav>
                 <ul>
                     <li>
@@ -16,7 +16,7 @@ function Header(){
                     </li> */}
                 </ul>
             </nav>
-        </header>
+        </footer>
     )
 }
 
