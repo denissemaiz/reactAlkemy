@@ -359,7 +359,30 @@ Hay distintas formas de implementar CSS en React:
 *Tailwind*: https://tailwindcss.com ; en este caso no alcanza con descargarla. Es una librería muy poderosa, si nos gusta CSS es recomendable inspeccionarla
 *Bulma*: https://bulma.io
 
->>
+>>RECORDAR: DENTRO DE REACT TODO LO QUE SE CONOCE COMO CLASS DEBE REMPLAZARSE POR CLASSNAME
 >>
 
-##
+# UNIDAD 4: DESARROLLANDO LA VISTA "LISTADO"
+
+## ARMADO DE LA VISTA
+El componente Listado nos mostrará un listado de películas
+
+**ELEMENTOS HTML**
+Lo que vamos a tener es una estructura a partir de columnas. React trabaja con este tipo de implementación de la mano de Bootstrap. Para esto trabajaremos sobre el componente Listado.js:
+    *HTML*:
+        -<div />
+    *Bootstrap*: voy a armar la estructura básica; no voy a agregarle la propiedad container porque ya la tengo implementada en App.js:
+        -propiedad className="row": la agrego en el div y creo una fila (atajo: .row-)
+        -propiedad className="col-4": la agrego en un div dentro del otro div y creo columnas (atajo: .col-). Como quiero generar 3 columnas, el tamaño que envío es 4; si quiero 4 columnas, envío tamaño 3 ¿por qué?[?]. En una fila pueden caber max 12
+        -propiedad style={{border: '1px solid red'}}: le agrego bordes de color a mis celdas. No se recomienda trabajar con estilos de esta forma
+        -https://getbootstrap.com/docs/5.1/components/card/ -> copio el código que me provee para armar una Card. 
+            [*] No olvidarme de cambiar class x className; y de cerrar la etiqueta <img /> que en HTML no se cierra
+
+**INFORMACIÓN DEL COMPONENTE**
+Dentro de esta celda vamos a traer información de una API. Esta nos provee del título de la película, del póster y de una descripción
+    [1] Importo el componente Link de React Router Dom para implementar links en un formato de SPA:
+        import {Link} from 'react-router-dom';
+    [2] Reemplazo la etiqueta <a /> por <Link /> y el href="" por to=""
+    [3] Cambio la información del Título, párrafo, etc
+
+**CODIGO JSX**
