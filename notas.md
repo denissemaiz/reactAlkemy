@@ -462,14 +462,51 @@ Lo más común es que pasemos la info que obtuve de la API a un State de React. 
     [2] Creo un Estado con su correspondiente nombre y setter; y le doy como valor un array vacío:
         const [ moviesList, setMoviesList ] = useState([]);
         [*] El setter me va a permitir setear el listado de películas; el array vacío después va a contener la info que llego de la API
-    [3] Seteo el listado de películas dentro de la función .then:
+        [*] Uso corchetes porque necesito declarar un array con las propiedades porque la función useState nos retorna un array con esas dos posiciones (indice 0: valor del estado moviesList, indice 1: la función que me permite actualizar setMoviesList)
+    [3] Seteo el estado listado de películas dentro de la función .then:
         setMoviesList(apiData)
     [4] Le paso la dependencia setMoviesList al array vacío que quedaba luego del cierre de useEffect
     [5] Si le agrego un consoleLog, voy a ver que primero me trae el Array vacío y después me dice que es un objeto porque estoy guardando toda la respuesta de la API (page, results, total_pages, total_results)
     [6] A mi me interesa, en este caso, solo results; entonces:
         setMoviesList(apiData.results)
 
-**REQUERIMIENTOS MÍNIMOS**
-Los requerimientos mínimos que la API espera de nuestra app para poder entregarnos la información
+>>
+>>
 
-**PARTES DE LA RESPUESTA DE LA API**
+## RENDERIZACIÓN DE DATOS EN COMPONENTE
+Renderizaremos la info que obtuvimos en nuestro .jsx. La primera parte ya la adelantamos (seteando el estado del array
+
+**RENDERIZACIÓN DE DATOS DINÁMICOS**
+El card es el que va a tener la información. Hasta el momento yo tengo un solo <div className="card" />, ¿cómo hago para que me entren 20 películas? Vamos a utilizar el método de iteración map
+    *El método map*: usado de otra manera te devuelve un array nuevo. Acá, lo que va a hacer es permitirte iterar un array de información. El método map toma un callback, este callback es una función que toma dos parámetros
+    [*] Recordar: dentro de los componentes de React no podemos usar otro tipo de iterador como el FOR u otro que no retorne nada
+    [1] Dentro del <div className="row" /> vamos a abrir {} y vamos a hacer un map del array moviesList:
+        {moviesList.map((oneMovie, idx));}
+        Los parámetros representan:
+        -oneMovie: cada uno de los elementos presentes en el array moviesList
+        -idx: indice del array en el que se encuentra ese elemento [i]
+    [2] El método map es una función, como tal tiene un return (creo que es una función). Dentro del return voy a enviar todo el resto de la info que tenía: columnas, cards, etc
+    [3] Necesito generar una key única para cada uno de los elementos que estoy generando con la iteración. Para eso, tengo que agregar dentro del contenedor más general un key={idx}:
+        <div className="col-4" key={idx}>
+
+**IMPLEMENTAR LA INFO**
+[*] Recordemos que guardé el objeto de cada película en la variable oneMovie
+[*] De toda la info que me provee la API voy a tomar: title, poster_path y overview
+    [1] Reemplazo el texto Movie Title por la info title:
+        <h5 className="card-title">{ oneMovie.title }</h5>
+    [2] Reemplazo la src de la img  por la info poster_path:
+        <img src={ oneMovie.poster_path } className="card-img-top" alt="..." />
+        [*] Si nos fijamos en la Consola confirmamos que img cargo la info del poster_path; pero esto no es una url desde donde yo pueda obtener la imagen. En su documentación, la API me dice que si yo quiero sacar las imagenes yo tengo que darle la URL que me provee en:
+        https://developers.themoviedb.org/3/getting-started/images
+        Para agregar esto voy a necesitar hacer uso de Plantillas Literales (Template Literal) a través de estos símbolos [``], de la URL que copio (sin el final que es un ejemplo) y de ${ oneMovie.poster_path }:
+        <img src={ `https://image.tmdb.org/t/p/w500/${oneMovie.poster_path}` } className="card-img-top" alt="..." />
+    [3] Reemplazo el texto Review de la movie por la info overview:
+        <p className="card-text">{ oneMovie.overview }</p>
+        [*] Para que las cards no me queden disparejas, voy a agregarle una condición al overview que se llama substring que le indique desde que caracter hasta que otro voy a mostrar:
+        <p className="card-text">{ oneMovie.overview.substring(0, 100) }</p>
+            [*] Puedo hacer lo mismo con los títulos
+    
+>>
+>>
+
+##
