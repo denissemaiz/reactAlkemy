@@ -190,7 +190,7 @@ Este Token lo vamos a usar más adelante; cuando querramos validar si la persona
     -Puedo acceder a él a través de la Consola, ingresando localStorage.
     -Local Storage solamente almacena datos string; o sea que si yo tengo un array o un objeto, necesito pasarlo primero a un string. Esto lo puedo hacer a través de stringFAY??????. Lo mismo cuando obtengo algo que se guarda como stringDEFAY???, para poder trabajarlo voy a necesitar convertirlo en el objeto o array o lo que sea.
 
->>
+>> NO ES QUE YO ME LOGUEO EN LA API, UNA API NO HACE ESO. LA API NOS DA COMO UN TICKET QUE VALIDA QUE INGRESAMOS
 >>
 
 ## REDIRECCIÓN AL COMPONENTE LISTADO
@@ -385,4 +385,36 @@ Dentro de esta celda vamos a traer información de una API. Esta nos provee del 
     [2] Reemplazo la etiqueta <a /> por <Link /> y el href="" por to=""
     [3] Cambio la información del Título, párrafo, etc
 
-**CODIGO JSX**
+>>
+>>
+
+## PROTECCIÓN DE LA RUTA "/LISTADO"
+Es importante proteger las rutas porque eso nos permite hacer que todas las personas que no estén autenticadas en nuestra aplicación no puedan ver algún tipo de contenido
+
+**PROTEGER LA RUTA**
+Es relativamente sencillo. Voy a exigir algún tipo e información (ya sea que venga de una API o que esté en el localStorage) y lo que voy a hacer es un tipo de renderizado condicional, en el que lo primero que voy a decir es: si no tengo ESA información, quiero hacer una redirección
+
+**REDIRECCIÓN**
+La redirección que se ejecuta cuando intento acceder al Listado sin estar logueado puede ser mejorada para que no se renderice y haga como un parpadeo.
+El history('/'); que realizábamos dentro del useEffect en el componente Listado.js es un proceso en el cual lo que hago es cambiar la ruta en la que me encuentro y yo no quiero hacer eso; no quieroo llegar hasta ahí para luego cambiarla, yo quiero ser redirigido:
+    [1] Sacar const token= localStorage.getItem('token'); de adentro del useEffect y cambiar const x let (constante por variable):
+        let token= localStorage.getItem('token');
+    [2] Borro todo lo que tengo dentro del useEffect (useEffect incluido)
+    [3] Importo el componente Navigate de React Router Dom:
+        import { Navigate } from 'react-router-dom';
+    [4] Voy a utilizar un renderizado condicional (short circuit):
+        [1] Luego voy a decir: si no tengo el token (!token) quiero hacer una redirección:
+            { !token && <Navigate />}
+            [*] Para abrir sentencias de javascript en el return necesito hacerlo dentro de: {}
+            [*] Recordemos que la negación hace que todo aquello que sea falso se convierta en verdadero y todo aquello que sea verdadero se convierta en falso. Un valor null es un falso.
+        [2] Indico hacia dónde quiero hacer la redirección con la propiedad replace to="":
+            { !token && <Navigate replace to="/"/>}
+        [3] Agrego <></> para encapsular todo
+
+*Redirección en el login*: hago lo mismo para proteger la ruta del Login si ya estoy logueado:
+    [1] Agrego la variable token antes del return:
+        let token = localStorage.getItem('token');
+    [2] Digo: si tengo el token quiero hacer una redirección hacia Listado, no quiero que se cargue el Login:
+        {token && <Navigate replace to="/listado"/> }
+    
+>>CON EL USE NAVIGATE NO ESTABA MAL HECHO, PERO DE ESTA FORMA EVITO QUE SE RENDERICE TODO EL COMPONENTE LISTADO ANTES DE >>CAMBIAR LA RUTA Y >>QUEDA MÁS PROLIJO A LA VISTA

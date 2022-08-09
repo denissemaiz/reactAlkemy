@@ -1,18 +1,23 @@
-import { useEffect } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+/* import { useEffect } from 'react'; */
+import { /* useNavigate, */ Link, Navigate } from 'react-router-dom';
 
 function Listado(){
 
-    const history = useNavigate();
-    
+    let token= localStorage.getItem('token');
+
+/*  const history = useNavigate();
+   
     useEffect(() => {
         const token= localStorage.getItem('token');
         if(token === null){
             history('/');
         }
-    }, []);
+    }, []); */
 
     return (
+        <>
+        { !token && <Navigate replace to="/"/>}
+        
         <div className="row">
             <div className="col-4" style={{border: '1px solid red'}}>
                 <div className="card" /* style="width: 18rem;" */>
@@ -36,6 +41,7 @@ function Listado(){
             <div className="col-4" style={{border: '1px solid red'}}>Peli 9</div> */}
 
         </div>
+    </>
     )
 }
 
