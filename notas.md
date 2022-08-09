@@ -397,8 +397,8 @@ Es relativamente sencillo. Voy a exigir algún tipo e información (ya sea que v
 **REDIRECCIÓN**
 La redirección que se ejecuta cuando intento acceder al Listado sin estar logueado puede ser mejorada para que no se renderice y haga como un parpadeo.
 El history('/'); que realizábamos dentro del useEffect en el componente Listado.js es un proceso en el cual lo que hago es cambiar la ruta en la que me encuentro y yo no quiero hacer eso; no quieroo llegar hasta ahí para luego cambiarla, yo quiero ser redirigido:
-    [1] Sacar const token= localStorage.getItem('token'); de adentro del useEffect y cambiar const x let (constante por variable):
-        let token= localStorage.getItem('token');
+    [1] Sacar const token= localStorage.getItem('token'); de adentro del useEffect y cambiar const x let (constante por variable) y localStorage por sessionStorage:
+        let token= sessionStorage.getItem('token');
     [2] Borro todo lo que tengo dentro del useEffect (useEffect incluido)
     [3] Importo el componente Navigate de React Router Dom:
         import { Navigate } from 'react-router-dom';
@@ -413,8 +413,63 @@ El history('/'); que realizábamos dentro del useEffect en el componente Listado
 
 *Redirección en el login*: hago lo mismo para proteger la ruta del Login si ya estoy logueado:
     [1] Agrego la variable token antes del return:
-        let token = localStorage.getItem('token');
+        let token = sessionStorage.getItem('token');
     [2] Digo: si tengo el token quiero hacer una redirección hacia Listado, no quiero que se cargue el Login:
         {token && <Navigate replace to="/listado"/> }
     
->>CON EL USE NAVIGATE NO ESTABA MAL HECHO, PERO DE ESTA FORMA EVITO QUE SE RENDERICE TODO EL COMPONENTE LISTADO ANTES DE >>CAMBIAR LA RUTA Y >>QUEDA MÁS PROLIJO A LA VISTA
+>>CON EL USE NAVIGATE NO ESTABA MAL HECHO, PERO DE ESTA FORMA EVITO QUE SE RENDERICE TODO EL COMPONENTE LISTADO ANTES DE >>CAMBIAR LA RUTA Y QUEDA MÁS PROLIJO A LA VISTA
+
+## OBTENCIÓN DE DATOS DESDE LA API
+La API que vamos a utilizar es la de https://www.themoviedb.org/settings/api 
+[*] documentación: https://developers.themoviedb.org/3/getting-started/introduction
+
+**OBTENCIÓN DE LA API**
+    [1] Debo loguearme y, en este caso y en muchos otros, debo enviar un reporte de cómo voy a usar esta API, para qué tipo de desarrollo, cómo es la app, etc
+    [2] Por un lado tengo la Clave de la API que me generó el servidor. Por el otro un ejemplo de splicitud de API; cuando ingreso a esa dirección que me pone de ejemplo, lo que voy a ver es la info que me trae la API
+    [3] Me interesa traerme las películas más recientes; para eso:
+        >> https://developers.themoviedb.org/3/getting-started/introduction
+        >> Discover > Movie Discover
+        >> Try it out -> me va a traer un montón de info de las películas
+        >> [abro el link que aparece al final, al lado de SEND REQUEST y le agrego la key en la url]
+            [*] Me trae un objeto con un page, results, total_pages, total_results. En results viene un array con 20 elementos, cada uno representa una película; esto es lo que me interesa
+        >> Chequeo el formato de la info que tiene la API
+    [4] Copio la url del link que estaba chusmeando (https://api.themoviedb.org/3/discover/movie?api_key=6b6d4a8dd81647dcfeeb993329bfb039&language=en-US&sort_by=popularity.desc&include_adult=false&include_video=false&page=1&with_watch_monetization_types=flatrate) para hacer el llamado a la API desde mi componente Listado.js 
+
+**LLAMADO A LA API**
+En React los llamados a la API los hacemos dentro del hook useEffect
+    [1] importo el useEffect:
+        import { useEffect } from 'react';
+    [2] En la función, antes del return, llamo al useEffect y le paso una constante con la url que copié anteriormente:
+        useEffect(() => {
+            const endPoint = 'https://api.themoviedb.org/3/discover/movie?api_key=6b6d4a8dd81647dcfeeb993329bfb039&language=es-ES&sort_by=popularity.desc&include_adult=false&include_video=false&page=1&with_watch_monetization_types=flatrate'
+            }
+        }, [])
+        [*] el useEffect para que se ejecute una sola vez necesita tener un array vacío
+    [3] Llamo a la API a través de axios con el método get pasando como parámetro el endpoint:
+        import axios from 'axios';
+        axios.get(endPoint);
+    [4] Como axios nos devuelve una promesa, necesito implementar el método .then para obtener la rta:
+        .then(response => {
+            console.log(response)
+        })
+    [5] Si en la Consola me muestra un status 200 es que está todo OK. Ahí mismo voy a poder ver la info que trae expandiendo >data
+        [*] Entonces, toda la info de la API la tengo en responde.data
+
+**RESPUESTA DE LA API**
+Lo más común es que pasemos la info que obtuve de la API a un State de React. Por eso es que son importantes los Estados, porque voy a poder tomar luego ese State que se actualizó al momento en que me llegó la info de la API, y trabajar con el mismo. Para esto: 
+    [1] Importo el useState en mi componente Listado.js:
+        import { useState } from 'react';
+    [2] Creo un Estado con su correspondiente nombre y setter; y le doy como valor un array vacío:
+        const [ moviesList, setMoviesList ] = useState([]);
+        [*] El setter me va a permitir setear el listado de películas; el array vacío después va a contener la info que llego de la API
+    [3] Seteo el listado de películas dentro de la función .then:
+        setMoviesList(apiData)
+    [4] Le paso la dependencia setMoviesList al array vacío que quedaba luego del cierre de useEffect
+    [5] Si le agrego un consoleLog, voy a ver que primero me trae el Array vacío y después me dice que es un objeto porque estoy guardando toda la respuesta de la API (page, results, total_pages, total_results)
+    [6] A mi me interesa, en este caso, solo results; entonces:
+        setMoviesList(apiData.results)
+
+**REQUERIMIENTOS MÍNIMOS**
+Los requerimientos mínimos que la API espera de nuestra app para poder entregarnos la información
+
+**PARTES DE LA RESPUESTA DE LA API**

@@ -52,7 +52,7 @@ function Login(){
 
     return(
         <>
-            {token && <Navigate replace to="/listado"/> }
+            {token && <Navigate replace to="/listado" /> }
             <div className='row'>
                 <div className='col-6 offset-3'>
                     <h2>Formulario de login</h2>

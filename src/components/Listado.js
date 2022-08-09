@@ -1,25 +1,31 @@
-/* import { useEffect } from 'react'; */
+import { useEffect, useState } from 'react';
 import { /* useNavigate, */ Link, Navigate } from 'react-router-dom';
+import axios from 'axios';
 
 function Listado(){
 
     let token= localStorage.getItem('token');
 
-/*  const history = useNavigate();
+    const [ moviesList, setMoviesList ] = useState([]);
    
     useEffect(() => {
-        const token= localStorage.getItem('token');
-        if(token === null){
-            history('/');
-        }
-    }, []); */
+        const endPoint = 'https://api.themoviedb.org/3/discover/movie?api_key=6b6d4a8dd81647dcfeeb993329bfb039&language=es-ES&page=1'
+        /* https://api.themoviedb.org/3/discover/movie?api_key=6b6d4a8dd81647dcfeeb993329bfb039&language=es-ES&sort_by=popularity.desc&include_adult=false&include_video=false&page=1&with_watch_monetization_types=flatrate */
+        axios.get(endPoint)    
+            .then(response => {
+                const apiData = response.data;
+                setMoviesList(apiData.results)
+            })
+    }, [setMoviesList]);
+
+    console.log(moviesList)
 
     return (
         <>
         { !token && <Navigate replace to="/"/>}
         
         <div className="row">
-            <div className="col-4" style={{border: '1px solid red'}}>
+            <div className="col-4">
                 <div className="card" /* style="width: 18rem;" */>
                     <img src="..." className="card-img-top" alt="..." />
                     <div className="card-body">
@@ -31,15 +37,6 @@ function Listado(){
                     </div>
                 </div>
             </div>
-{/*             <div className="col-4" style={{border: '1px solid red'}}>Peli 2</div>
-            <div className="col-4" style={{border: '1px solid red'}}>Peli 3</div>
-            <div className="col-4" style={{border: '1px solid red'}}>Peli 4</div>
-            <div className="col-4" style={{border: '1px solid red'}}>Peli 5</div>
-            <div className="col-4" style={{border: '1px solid red'}}>Peli 6</div>
-            <div className="col-4" style={{border: '1px solid red'}}>Peli 7</div>
-            <div className="col-4" style={{border: '1px solid red'}}>Peli 8</div>
-            <div className="col-4" style={{border: '1px solid red'}}>Peli 9</div> */}
-
         </div>
     </>
     )
