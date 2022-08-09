@@ -1,6 +1,8 @@
+import '../css/footer.css';
+
 function Footer(){
     return(
-        <header>
+        <footer>
             <nav>
                 <ul>
                     <li>
@@ -12,7 +14,7 @@ function Footer(){
                 </ul>
             </nav>
             <p> Copyright Alkemy Challenge </p>
-        </header>
+        </footer>
     )
 }
 

@@ -304,5 +304,62 @@ Es la parte final de un sitio web. Se ha dejado un poco de lado porque no se le 
         [*] Siempre que usemos los enlaces tradicionales que nos lleven a una página distinta a la de mi app, React recomienda implementar el atributo [rel=""] y los valores: "noopener noreferrer". Con esto decimos que es un enlace que no nos importa hacerle seguimiento ni nada; es decir, evitamos que los enlaces estén como corruptos y te lleven a un lado que no es el especificado
     [6] Etiqueta <p />: para poner el Copyright o cualquier texto
 
+>>
+>>
 
+## INTEGRACIÓN DEL HEADER Y EL FOOTER
+Recordemos que los componentes son bloques de código reutilizables que a mi me gustaría que estén presentes en determinados lugares. El Header y el Footer tienen la curiosidad de estar presentes a lo largo de toda la aplicación; por eso debo integrarlos al flujo de la aplicación como omnipresentes
 
+**INTEGRACIÓN HEADER Y FOOTER**
+[1] En el archivo App.js, importo el componente Header y el componente Footer:
+    import Header from './components/Header';
+    import Footer from './components/Footer';
+[2] Ubico el <Header /> antes de entrar al <Routes /> 
+[3] Ubico el <Footer /> después del <Routes />
+[*] El componente App.js tiene la estructura principal de la aplicación, por eso, para que el header y footer permanezcan "omnipresentes" a lo largo de nuestra app, debo importarlo acá
+
+>>
+>>
+
+## INTERGACIÓN DE LIBRERÍA CSS
+
+**MANERAS DE TRABAJAR CSS CON REACT**
+Hay distintas formas de implementar CSS en React:
+    -Stile Components: librería
+    -SASS: pre-procesador
+    -Bootstrap React: framework
+    -Tailwind CSS: framework
+
+**INTEGRACIÓN**
+*Forma clásica*: CSS dentro de React trabaja de la misma manera que un CSS tradicional: escribís tu CSS, lo vinculás y listo.
+    [1] Creo una carpeta de nombre [css] dentro de [src]
+    [2] Creo un archivo [app.css] donde voy a trabajar los estilos de mi app
+    [3] Importo la carpeta en mi archivo [app.js] directamente así: 
+        import './css/app.css';
+    [4] Si quiero escribir todo mi CSS a mano, de esta manera puedo hacerlo
+*Forma Modular*: trabajo con CSS armando componentes
+    [1] Ídem
+    [2] Creo distintas hojas de estilo que funcionen como componentes dentro de esta carpeta. Por ejemplo, creo un componente que se llame footer.css, en el cual voy a darle estilo solamente al componente
+    [3] Importo el archivo footer.css desde Footer.js:
+        import '../css/footer.css'
+        [*] utilizo '../' porque en ese archivo estoy dentro de la carpeta components y para acceder a la carpeta css tengo que ir para atrás; '../' indica que vaya para atrás 
+*Librerías de CSS*: una librería de CSS es un conjunto de archivos que podemos descargarnos e implementar de manera fácil, rápida y cómoda
+
+**LIBRERÍAS CSS**
+*Bootstrap*: https://getbootstrap.com 
+    [1] Descargo donde dice Compiled CSS and JS
+    [2] Se me descarga un zip ocn 2 carpetas: css y js
+        [*] Las cosas que te da Bootstrap en el nivel de funcionalidades de javascript no son muy amenas. Recomendamos no utilizar
+    [3] Copio el archivo css > bootstrap.min (.css) en la carpeta src > css de mi aplicación
+    [4] Importo la carpeta en mi archivo [app.js] así: 
+        import './css/app.css';
+    [*] Al hacer esto, Bootstrap pisará mucho de lo que yo pude haber hecho con otros archivos CSS
+    [5] De aquí para adelante lo que queda por hacer es empezar a implementar las cosas que te da Bootstrap para darle estilos a tu aplicación. Por ejemplo:
+        <div className="container">
+*Tailwind*: https://tailwindcss.com ; en este caso no alcanza con descargarla. Es una librería muy poderosa, si nos gusta CSS es recomendable inspeccionarla
+*Bulma*: https://bulma.io
+
+>>
+>>
+
+##
