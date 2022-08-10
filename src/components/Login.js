@@ -39,7 +39,7 @@ function Login(){
             .post('http://challenge-react.alkemy.org', { email, password })
             .then ((res) =>{
                 swAlert(
-                    { icon: "success" }
+                    { text: "Perfecto! Ingresaste correctamente",icon: "success" }
                 );
                 console.log(res.data);
                 const tokenRecibido = res.data.token;

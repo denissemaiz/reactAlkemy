@@ -554,7 +554,7 @@ Ya habíamos preparado el botón View detail como un Link porque estaba pensado 
         <Link to={`/detalle?movieID=${oneMovie.id}`} className="btn btn-primary">View detail</Link>
 
 **INFORMACIÓN**
-La información que a mi me va a permitir ver el detalle la encuntro en la Documentación de la API:
+La información que a mi me va a permitir ver el detalle la encuentro en la Documentación de la API:
     [1] https://developers.themoviedb.org/3/movies/get-movie-details > Try it out ; acá voy a encontrar el endpoint para acceder a los detalles de las películas (al lado de SEND REQUEST)
     [2] Este endpoint nos pide el ID de la película y la API key:
         https://api.themoviedb.org/3/movie/[{movie_id}]?api_key=[<<api_key>>]&language=es-ES
@@ -579,3 +579,53 @@ Por ahora, el componente Detalle.js no está protegido con el token. O sea si in
         [1] Reemplazo todos los localStorage x sessionStorage
         [2] Para borrar forzosamente el token de sessionStorage, en la Consola desde el navegador:
             sessionStorage.clear()
+
+>>
+>>
+
+## ARMADO DE LA VISTA "DETALLE"
+
+**CAPTURAR INFO DE LA URL**
+Nuestro objetivo puntual va a ser poder tomar el ID que viaja en la URL para luego capturar la info puntual de esa peli
+    *URL Search Params*: la interfaz URLSearchParams define métodos útiles para trabajar con los parámetros de búsqueda de una URL; es una interfaz que nos provee javascript
+        [1] La utilizamos a través de una variable objeto:
+            let searchParams = new URLSearchParams(paramsString);
+            [*] Dentro de los paréntesis especifíco de dónde es que yo quiero sacar los params; ahí le voy a pasar la ruta 
+        [2] Para obtener la URL, javascript tiene un método que es:
+            window.location
+            [*] Si quiero obtener la parte específica de la URL que tiene el ID, que tradicionalmente se conoce como la [query-string] y que es todo lo que viaja después del "?":
+                window.location.search
+        [3] A mi me sirve el número solamente; para obtener eso:
+            let movieID = searchParams.get('movieID');
+            [*] Dentro de los paréntesis tengo que poner el identificador que utilicé en el Link que yo armé:
+            <Link to={`/detalle? [movieID] =${oneMovie.id}`}>View detail</Link>
+        [4] Con este ID ahora voy a necesitar hacer un llamado a la API
+
+**LLAMADOS ASINCRÓNICOS**
+    *Endpoint*
+        [1] Recordemos que el endopint para acceder a los detalles de las películas que necesito para hacer el llamado a la API lo encuentro acá:
+            https://developers.themoviedb.org/3/movies/get-movie-details > Try it out (abajo, al lado de SEND REQUEST)
+        [2] Este endpoint nos pide el ID de la película y la API key:
+            https://api.themoviedb.org/3/movie/[{movie_id}]?api_key=[<<api_key>>]&language=es-ES
+    *Llamado a la API*
+        [1] Por sugerencia, se hacen siempre dentro del useEffect:
+            useEffect(()=> {
+                console.log(movieID)
+            }, []);
+
+**ARMADO DE LA ESTRUCTURA**
+Esqueleto. Luego la vamos a hacer dinámica
+    *Elementos HTML*
+        -<div />
+        -<h5 />
+        -<ul />
+        -<li />
+    *Porpiedades Bootstrap*
+        -"row": fila para armar todo 
+        -"col-4": columna para la imagen
+        -"col-8": columna para el título
+
+>>
+>>
+
+##
