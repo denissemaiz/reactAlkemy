@@ -594,24 +594,20 @@ Nuestro objetivo puntual va a ser poder tomar el ID que viaja en la URL para lue
         [2] Para obtener la URL, javascript tiene un método que es:
             window.location
             [*] Si quiero obtener la parte específica de la URL que tiene el ID, que tradicionalmente se conoce como la [query-string] y que es todo lo que viaja después del "?":
-                window.location.search
+                window.location.search >> <!-- movieID=616037 -->
         [3] A mi me sirve el número solamente; para obtener eso:
             let movieID = searchParams.get('movieID');
             [*] Dentro de los paréntesis tengo que poner el identificador que utilicé en el Link que yo armé:
-            <Link to={`/detalle? [movieID] =${oneMovie.id}`}>View detail</Link>
+                <Link to={`/detalle? [movieID] =${oneMovie.id}`}>View detail</Link>
         [4] Con este ID ahora voy a necesitar hacer un llamado a la API
 
 **LLAMADOS ASINCRÓNICOS**
-    *Endpoint*
-        [1] Recordemos que el endopint para acceder a los detalles de las películas que necesito para hacer el llamado a la API lo encuentro acá:
-            https://developers.themoviedb.org/3/movies/get-movie-details > Try it out (abajo, al lado de SEND REQUEST)
-        [2] Este endpoint nos pide el ID de la película y la API key:
-            https://api.themoviedb.org/3/movie/[{movie_id}]?api_key=[<<api_key>>]&language=es-ES
     *Llamado a la API*
         [1] Por sugerencia, se hacen siempre dentro del useEffect:
             useEffect(()=> {
                 console.log(movieID)
             }, []);
+        [2] Continúa en el prox ##
 
 **ARMADO DE LA ESTRUCTURA**
 Esqueleto. Luego la vamos a hacer dinámica
@@ -628,4 +624,66 @@ Esqueleto. Luego la vamos a hacer dinámica
 >>
 >>
 
-##
+## OBTENER LOS DATOS DE LA API 
+
+**LLAMADO A LA API**
+    [1] Necesito usar axios; importo la librería en el componente Detalle.js:
+        import axios from  'axios';
+    [2] Dentro del useEffect, utilizo axios para hacer el llamado a la API a través del método .get:
+        axios.get(<!-- endpoint -->)
+    *Endpoint*: 
+        [1] Recordemos que el endopint (el de los detalles de las películas) que necesito para hacer el llamado a la API lo encuentro acá:
+            https://developers.themoviedb.org/3/movies/get-movie-details > Try it out > (abajo, al lado de SEND REQUEST)
+        [2] Este endpoint nos pide el ID de la película y la API key:
+            https://api.themoviedb.org/3/movie/[{movie_id}]?api_key=[<<api_key>>]&language=es-ES
+        [3] Creo una constante endPoint dentro del useEffect y le doy como valor ese URL, reemplazando la API key (por ahora va a crashear porque me falta hacer el reemplazo de movie ID):
+            const endPoint = 'https://api.themoviedb.org/3/movie/[{movie_id}]?api_key=6b6d4a8dd81647dcfeeb993329bfb039&language=es-ES'
+        [4] El movie ID es un elemento dinámico        
+            *Dinamicidad*:
+            [1] Encapsulo toda la URL con los Template Literal [``]
+            [2] Reemplazo [{movie_id}] x ${movieID} (que es la variable que ya habíamos declarado y dado valor con el .get del URLSearchParams)
+        [5] Agrego endPoint como parámetro del .get
+    [3] Agrego el método .then y el .catch:
+        .then(response => {
+            const movieData = response.data;
+            console.log(movieData);
+        })
+        .catch(error => {
+            console.log(error)
+        })
+    [4] Chequeo en la Consola si obtengo la info que le pedí a la API
+
+>>
+>>
+
+## RENDERIZAR LOS DATOS OBTENIDOS DE LA API
+
+**INFORMACIÓN DE LA API**
+Para mostrar la información de la API dentro del componente, necesito hacer un Estado porque yo no sé en qué momento me va a llegar la info (recordemos que es un llamado asincrónico). Al principio voy a tener un State que es vacío y dsps voy a llenarlo con la info:
+    [1] Importo el useState:
+        import { useState } from 'react';
+    [2] Dentro de mi función Detalle, antes del return, declaro un array que le doy valor llamando al useState:
+        const [ movie, setMovie ] = useState(null);
+        [*] setMovie lo voy a utilizar dentro de axios parar setear esta variable con la info que me traiga del endPoint
+        [*] En principio ese valor que le doy es null, luego voy a cargarlo de info
+    *Renderizado condicional*: para evitar tener errores, como podría pasar si en el return pidieramos un dato que no pudimos setear por problemas con la API
+        [1] Meto toda la estructura del componente, todo lo que está en el return que se muestra en pantalla al usuario al solicitar la info, en un renderizado condicional que diga que si movie es true (o sea si no es null, si existe), que lo muestre:
+            { movie && 
+                <>
+                <divs estructura />
+                </>
+            }
+            [*] Tengo que encapsularlos en los <> </> porque la condición está diciendo que si movie tiene info retorne eso, y los retornos son siempre de un solo elemento
+        [2] Puedo agregar una condición para cuando no tengo movie:
+            { !movie && <p>Cargando...<p/> }
+        [3] Voy pasando la info que obtengo a través del objeto movie en los <div> correspondientes según la información que tiene la API. Por ejemplo:
+            <h2>{ movie.title }</h2> 
+            <h5>Título original: { movie.original_title }</h5>
+            <h5>Fecha de estreno: { movie.release_date }</h5>
+        [4] Para pasar la imagen tengo que pasar como src="" la url que me da la API en su Documentación; como hicimos en Listado.js
+            <img src={ `https://image.tmdb.org/t/p/w500/${movie.poster_path}` } className="img-fluid" alt="movie poster" />
+        [5] Para los géneros, como la API los envía en un array y React no puede renderizar objetos, voy a tener que hacer algo distinto: mapear
+            *Map*: es un método incorporado en los arrays para iterar a través de los elementos dentro de una colección de arreglos en JavaScript. Como un bucle para avanzar de un elemento a otro en una lista, manteniendo el orden y la posición de cada elemento
+            [1] Reemplazo los 3 <li /> por un mapeo:
+                { movie.genres.map(oneGenre => <li key={oneGenre.id}>{oneGenre.name}</li>) }
+                [*] le agrego como key el id que me provee la API; lo agrgeo como propiedad del <li /> para que no se muestre en pantalla pero distinga cada hijo del mapeo
