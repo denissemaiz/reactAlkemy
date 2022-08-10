@@ -1,7 +1,12 @@
-function Detalle() {
+import { Navigate } from 'react-router-dom';
 
+function Detalle() {
+    let token= sessionStorage.getItem('token');
     return(
-        <h2>Soy el componente Detalle</h2>
+        <>
+        { !token && <Navigate replace to="/"/>}
+        <h2>Soy el componente Detalle</h2> 
+        </>
     )
 }
 

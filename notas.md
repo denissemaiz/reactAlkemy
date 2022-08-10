@@ -563,4 +563,19 @@ La información que a mi me va a permitir ver el detalle la encuntro en la Docum
 >>
 >>
 
-# UNIDAD 5
+# UNIDAD 5: DESARROLLANOD LA VISTA "DETALLE"
+
+## REPASO DE VERIFICACIÓN DE USUARIO Y TOKEN
+Por ahora, el componente Detalle.js no está protegido con el token. O sea si intento ingresar sin haberme logueado, puedo hacerlo
+
+**TOKEN**
+    *Funcionamiento*
+        [1] Al igual que en el componente Listado.js, voy a hacer un renderizado condicional, con la declaración de la variable token:
+            import { Navigate } from 'react-router-dom';
+            let token= localStorage.getItem('token');
+            return(
+            { !token && <Navigate replace to="/"/>})
+    *Eliminar automaticamente*: si quiero que el token se elimine al terminar la sesión del usuario del navegador, voy a tener que dejar de trabajar con el localStorage y voy a utilizar el sessionStorage:
+        [1] Reemplazo todos los localStorage x sessionStorage
+        [2] Para borrar forzosamente el token de sessionStorage, en la Consola desde el navegador:
+            sessionStorage.clear()
