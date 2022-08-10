@@ -444,7 +444,7 @@ En React los llamados a la API los hacemos dentro del hook useEffect
             const endPoint = 'https://api.themoviedb.org/3/discover/movie?api_key=6b6d4a8dd81647dcfeeb993329bfb039&language=es-ES&sort_by=popularity.desc&include_adult=false&include_video=false&page=1&with_watch_monetization_types=flatrate'
             }
         }, [])
-        [*] el useEffect para que se ejecute una sola vez necesita tener un array vacío
+        [*] el useEffect para que se ejecute una sola vez necesita tener un array vacío. 
     [3] Llamo a la API a través de axios con el método get pasando como parámetro el endpoint:
         import axios from 'axios';
         axios.get(endPoint);
@@ -461,7 +461,7 @@ Lo más común es que pasemos la info que obtuve de la API a un State de React. 
         import { useState } from 'react';
     [2] Creo un Estado con su correspondiente nombre y setter; y le doy como valor un array vacío:
         const [ moviesList, setMoviesList ] = useState([]);
-        [*] El setter me va a permitir setear el listado de películas; el array vacío después va a contener la info que llego de la API
+        [*] El setter me va a permitir setear el listado de películas; el array vacío después va a contener la info que llegue de la API. El definir el array como vacío me va a servir también si tengo problemas para conectar con la API; de esta forma, cuando haga el map, no importará si no tengo información, lo devuelve así vacío y no crashea
         [*] Uso corchetes porque necesito declarar un array con las propiedades porque la función useState nos retorna un array con esas dos posiciones (indice 0: valor del estado moviesList, indice 1: la función que me permite actualizar setMoviesList)
     [3] Seteo el estado listado de películas dentro de la función .then:
         setMoviesList(apiData)
@@ -509,4 +509,25 @@ El card es el que va a tener la información. Hasta el momento yo tengo un solo 
 >>
 >>
 
-##
+## MANEJO DE ERRORES
+Nos interesa manipular los errores, si llegaran a existir
+
+**MANEJO DE ERRORES**
+Qué hacer si en algun momento, aunque no sea tan común, la API se rompiera:
+    *Axios*: axios, al igual que fetch, viene con un método que se llama [.catch] que me va a permitir agarrar los errores que pudieran haber. El [.catch] necesita un callback que va a recibir como parametro un error:
+    .catch(error => {
+        console.log(error);
+    })
+    [*] De esta forma lo que vamos a lograr es que la app no crasheé y que solo se muestre en Consola el error
+    [*] Para informarle a la persona del error vamos a hacer uso del Sweet Alert
+    *Sweet alert*: función que recibe cualquier tipo de estructura .jsx
+    [1] Lo importamos:
+        import swAlert from '@sweetalert/with-react';
+    [2] Reemplazo el console.log dentro del .catch por un sweetAlert con un mensaje para el usuario:
+        .catch(error => {
+            swAlert(<h2>Hubo errores.<br/> Intenta más tarde</h2>);
+        })
+    [3] Es importante, para este manejo de errores, haber definido el useState con un array vacío. Si lo hubiese definido como null, si la conexión a la API salía mal, crasheaba igual porque me iba a decir que no podía hacer el map de un null
+        [*] Es importante que los Estados los declare con el tipo de dato que voy a tener finalmente; sobretodo cuando estoy mapeando
+
+
