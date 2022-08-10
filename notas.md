@@ -530,4 +530,37 @@ Qué hacer si en algun momento, aunque no sea tan común, la API se rompiera:
     [3] Es importante, para este manejo de errores, haber definido el useState con un array vacío. Si lo hubiese definido como null, si la conexión a la API salía mal, crasheaba igual porque me iba a decir que no podía hacer el map de un null
         [*] Es importante que los Estados los declare con el tipo de dato que voy a tener finalmente; sobretodo cuando estoy mapeando
 
+>>
+>>
 
+## INGRESO AL DETALLE DE CADA ÍTEM
+Vamos a ingresar al detalle de cada película
+
+**COMPONENTE DETALLE**
+Ya habíamos preparado el botón View detail como un Link porque estaba pensado que nos llevara a algún otro lugar. Ese otro lugar va a ser un nuevo componente Detalle.js
+    [1] Creo en la carpeta components el componente Detalle.js y creo su función:
+        function Detalle() {
+            return(
+                <h2>Soy el componente Detalle</h2>
+            )
+        }
+        export default Detalle;
+    [2] En App.js importo el componente y preparo una ruta Detalle, a la cual el usuario pueda acceder, y en la cual, adicionalmente, viaje el ID puntual de la película escogida:
+        import Detalle from './components/Detalle';
+        <Route path="/detalle" element={<Detalle />} />
+    [3] Desde el componente Lsitado.js, en el Link de View detail, voy a redireccionar a Detalle.js:
+        <Link to="/detalle" className="btn btn-primary">View detail</Link>
+    [4] Ahora necesito agregarle a la ruta el ID de la película que yo haya seleccionado. Para eso reemplazo el string de to="" por una sentencia de javascript (to={}), utilizo un Template Literal (``) y uno mi ruta /detalle a través de un ? con un identificador del dato que estoy requiriendo (movieID). Como este último identificador va a ser dinámico, debo asignarle una variable a través de =${}:
+        <Link to={`/detalle?movieID=${oneMovie.id}`} className="btn btn-primary">View detail</Link>
+
+**INFORMACIÓN**
+La información que a mi me va a permitir ver el detalle la encuntro en la Documentación de la API:
+    [1] https://developers.themoviedb.org/3/movies/get-movie-details > Try it out ; acá voy a encontrar el endpoint para acceder a los detalles de las películas (al lado de SEND REQUEST)
+    [2] Este endpoint nos pide el ID de la película y la API key:
+        https://api.themoviedb.org/3/movie/[{movie_id}]?api_key=[<<api_key>>]&language=es-ES
+    [3] Si hacemos un console.log de mi variable moviesList, voy a ver que dentro del detalle de cada objeto hay un elemento que es el ID
+
+>>
+>>
+
+# UNIDAD 5
