@@ -1,6 +1,7 @@
 import { Navigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import axios from  'axios';
+import swAlert from '@sweetalert/with-react';
 
 function Detalle() {
     let token= sessionStorage.getItem('token');
@@ -21,18 +22,18 @@ function Detalle() {
             })
             .catch(error => {
                 console.log(error)
-                /* swAlert(<h2>Hubo errores.<br/> Intenta más tarde</h2>); */
+                swAlert(<h2>Hubo errores.<br/> Intenta más tarde</h2>);
             })
     }, [movieID]);
 
     return(
         <>
             { !token && <Navigate replace to="/"/>}
-            { !movie && <p>Cargando...</p> }
+            { !movie && <p>Cargando...</p>}
             { movie &&
                 <>
-                    <h2>{ movie.title }</h2> 
-                    <div className='row'>
+                    <h1 className='px-5 pt-4'> { movie.title }</h1> 
+                    <div className='row px-5 pt-2 pb-4'>
                         <div className='col-4'>
                         <img src={ `https://image.tmdb.org/t/p/w500/${movie.poster_path}` } className="img-fluid" alt="movie poster" />
                         </div>

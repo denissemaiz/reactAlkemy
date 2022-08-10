@@ -28,7 +28,7 @@ function Listado(){
         <>
         { !token && <Navigate replace to="/"/>}
         
-        <div className="row">
+        <div className="row px-5">
             {
                 moviesList.map((oneMovie, idx) => {
                     return(

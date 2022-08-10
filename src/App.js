@@ -16,7 +16,7 @@ import './css/bootstrap.min.css';
 
 function App() {
   return (
-    <div className="container mt-3">
+    <div className="container-fluid" >
       <Header />
 
       <Routes>
