@@ -1,5 +1,7 @@
 import { Link } from 'react-router-dom';
 
+import Buscador from './Buscador';
+
 function Header(){
     return(
         <header>
@@ -18,7 +20,8 @@ function Header(){
                                 <Link className='nav-link' to="/listado">Listado</Link>
                             </li>
                         </ul>
-                    </div>           
+                    </div>
+                    <Buscador />           
                 </div>
             </nav>
         </header>

@@ -563,7 +563,7 @@ La información que a mi me va a permitir ver el detalle la encuentro en la Docu
 >>
 >>
 
-# UNIDAD 5: DESARROLLANOD LA VISTA "DETALLE"
+# UNIDAD 5: DESARROLLANDO LA VISTA "DETALLE"
 
 ## REPASO DE VERIFICACIÓN DE USUARIO Y TOKEN
 Por ahora, el componente Detalle.js no está protegido con el token. O sea si intento ingresar sin haberme logueado, puedo hacerlo
@@ -687,3 +687,60 @@ Para mostrar la información de la API dentro del componente, necesito hacer un 
             [1] Reemplazo los 3 <li /> por un mapeo:
                 { movie.genres.map(oneGenre => <li key={oneGenre.id}>{oneGenre.name}</li>) }
                 [*] le agrego como key el id que me provee la API; lo agrgeo como propiedad del <li /> para que no se muestre en pantalla pero distinga cada hijo del mapeo
+
+>>
+>>
+
+# UNIDAD 6: ARMANDO EL BUSCADOR Y LA SECCIÓN DE FAVORITOS
+
+## ARMADO DEL COMPONENTE BUSCADOR
+Desarrollaremos una barra de búsqueda
+
+**BARRA DE BÚSQUEDA**
+    [1] Creo un componente Buscador.js en mi carpeta components y desarrollo dentro la función básica:
+        function Buscador(){
+            return(
+                <h2>Buscador</h2>
+            )
+        }
+        export default Buscador;
+    *Ubicación*: seguramente lo queramos en un lugar donde siempre pueda estar presente para que el usuario pueda utilizarlo cuando quiera facilmente; la barra e navegación es el lugar ideal
+        [1] Llamo al componente Buscador desde el Header.js
+            import Buscador from './Buscador';
+        [2] Lo ubico en el return
+            <Buscador />
+
+**ELEMENTOS HTML**
+Voy a armar un formulario con HTML y Bootstrap:
+    [*] Copio el formulario que había armado para el Login
+        [1] Le saco: el evento onSubmit (por el momento), el span de Correo electrónico, todo el segundo label, los 2 <br />, el d-block
+        [2] Le reemplazo: el type="" x type="text", name="" x name="keyword", Ingresar x Buscar
+        [3] Le agrego: className="d-flex align-items-center" a la etiqueta <form>, "mb-0 mx-2" a la etiqueta <label>, placeholder="Escribe aquí..." en <input>
+
+**INFORMACIÓN**
+*Para manejar la información*
+    [1] Necesito un submitHandler, como usábamos en el Login; este va a recibir el evento de una función en la que voy a colocar un preventDefault() que evite que se refresque la página cuando envío el formulario:
+        const submitHandler = e => {
+            e.preventDefault();
+        }
+    [2] Le paso el submitHandler al formulario a través del onSubmit={}:
+        <form className="d-flex align-items-center" onSubmit={submitHandler}>
+*Para capturar la información*:
+    [1] Necesito una constante keyword que tenga como valor, en principio, el currentTarget del evento (o sea, el formulario porque fue el que disparó el evento con el onSubmit={submitHandler}):
+        const keyword = e.currentTarget
+    [2] Pero dentro de este formulario, yo necesito el input, lo que ingresó el usuario; a esto puedo acceder a través de su atributo name="", que en este caso es name="keyword":
+        const keyword = e.currentTarget.keyword;
+    [3] Esto me devuelve todo el input completo, con etiqueta, atributos, etc. A mi me interesa solo su valor:
+        const keyword = e.currentTarget.keyword.value; 
+*Para prevenir errores*:
+    [1] Importo la librería sweeetAlert:
+        import swAlert from '@sweetalert/with-react';
+    [2] Con un IF digo que si el keyword está vacío, si su longitud es 0, voy a lanzar una alerta:
+        if(keyword.length === 0){
+            swAlert({ text: "Escribe una palabra clave", icon: "error" })
+        }
+
+>>
+>>
+
+##
