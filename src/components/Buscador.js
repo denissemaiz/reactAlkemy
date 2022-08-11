@@ -3,10 +3,12 @@ import swAlert from '@sweetalert/with-react';
 function Buscador(){
     const submitHandler = e => {
         e.preventDefault();
-        const keyword = e.currentTarget.keyword.value;
+        const keyword = e.currentTarget.keyword.value.trim();
         
         if(keyword.length === 0){
             swAlert({ text: "Escribe una palabra clave", icon: "error" })
+        } else if(keyword.length < 2){
+            swAlert({ text: "Escribe más de un caracter", icon: "error" })
         }
     }
 

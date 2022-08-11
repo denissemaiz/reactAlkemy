@@ -719,7 +719,7 @@ Voy a armar un formulario con HTML y Bootstrap:
 
 **INFORMACIÓN**
 *Para manejar la información*
-    [1] Necesito un submitHandler, como usábamos en el Login; este va a recibir el evento de una función en la que voy a colocar un preventDefault() que evite que se refresque la página cuando envío el formulario:
+    [1] Necesito un submitHandler, como usábamos en el Login; este va a recibir el evento de una función en la que voy a colocar un preventDefault() que evite que se ejecute si no envío nada para que no haga un envío de formulario si no es necesario:
         const submitHandler = e => {
             e.preventDefault();
         }
@@ -743,4 +743,16 @@ Voy a armar un formulario con HTML y Bootstrap:
 >>
 >>
 
-##
+## VALIDACION DEL FORMULARIO DE BÚSQUEDA
+
+**VALIDACIÓN**
+Vamos a agregar algunas validaciones para evitar envíos de formulario innecesarios
+    [1] Los espacios que puedan quedar en un input, javascript los considera como un caracter (por ende el swAlert que habíamos hecho no funcionaría). Para esto vamos a hacer un [trim]
+        *Trim* (quitar, podar): es un método que sirve para eliminar los espacios en blanco de ambos extremos del string; no los del medio, solo los de ppo o final. Lo agrego:
+            const keyword = e.currentTarget.keyword.value.trim();
+    [2] La cantidad de caracteres también es interesante de limitar; puedo cambiar la condición en el IF:
+        if(keyword.length < 2){...
+    O puedo agregar un ELSE IF con un swAlert distinto dependiendo la situación:
+        else if(keyword.length < 2){
+            swAlert({ text: "Escribe más de un caracter", icon: "error" })
+        }    
