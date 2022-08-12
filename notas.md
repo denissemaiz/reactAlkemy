@@ -756,3 +756,84 @@ Vamos a agregar algunas validaciones para evitar envíos de formulario innecesar
         else if(keyword.length < 2){
             swAlert({ text: "Escribe más de un caracter", icon: "error" })
         }    
+
+>>
+>>
+
+## REDIRECCIONAMIENTO A LA SECCIÓN RESULTADOS
+
+**REDIRECCIONAMIENTO**
+    [1] Creo el componente Resultados.js en la carpeta components con su función
+    [2] Importo el componente a mi componente APP.js y lo agrego en el return de su función:
+        import Resultado from './components/Resultado';
+        <Route path="/resultado" element={<Resultado />} />
+    [3] Tengo que hacer una redirección desde el componente Buscador.js a Resultado.js. Lo hago a través de un IF usando el hook [useNavigate]:
+        [1] Importo el hook de la librería React Router Dom
+            import { useNavigate } from 'react-router-dom';
+        [2] Creo una constante history que va a tomar el valor del useNavigate:
+            const history = useNavigate();
+        [3] Dentro del IF, después de haber pasado todas las validaciones, hago el llamado a la constante history que cree y redirijo a /resultado
+            history('/resultado');
+    *Capturar la búsqueda*
+        [1] Modifico la redirección utilizando los Template Literal [``] para poder enviar un Query String (cadena de consulta) donde incluya la info de la búsqueda que se haga:
+            history(`/resultado?keyword=${keyword}`);
+            [*] En este caso usamos el mismo término "keyword" en ambos casos, pero la primera keyword podría haberla llamado de cualquier otra forma; la segunda es la variable que definimos las clases anteriores
+
+**LIMPIAR INPUT DE BÚSQUEDA**
+Si quisieramos limpiar el formulario una vez que se envía para que el input quede vacío:
+    [1] Agregamos dentro de este mismo else, antes de la redirección, un llamado al evento, al currentTarget (que sería el formulario) y al value de la keyword (que fue el name que le di al input) y le asignamos como valor un string vacío:
+        e.currentTarget.keyword.value = '';
+
+**CAPTURAR INFO QUE VIAJA EN LA URL**
+Vamos a necesitar esta info para luego hacer la búsqueda propiamente dicha y traer la info que se solicita. Para extraer la keyword que viaja en la URL en el componente Resultado.js:
+    [1] Defino una variable query (consulta) y le doy valor a través de la interfaz URLSearchParams, con la que capturo la URL a través del método window.location.search (.search es cuando querés obtener puntualmente la query-string):
+        let query = new URLSearchParams(window.location.search);
+    [2] Defino una varianle keyword y le doy valor con la variable anterior (query), a través del método .get, al que le paso como parámetro "keyword", que es la palabra que use en la URL para definir mi query:
+        let keyword = query.get('keyword');
+>>
+>>
+
+## LLAMADO A LA API CON KEYWORD
+
+**LLAMADO A LA API**
+La API nos provee de un sistema de búsqueda: https://developers.themoviedb.org/3/search/search-movies , ahí mismo nos dice qué Variables o Query Strings son necesarias (required)
+    [1] Copiamos el endpoint que nos provee al final de la sección Try it out:
+        https://api.themoviedb.org/3/search/movie?api_key=<<api_key>>&language=es-ES&page=1&include_adult=false
+        [*] Reemplazo api_key: 
+            https://api.themoviedb.org/3/search/movie?api_key=6b6d4a8dd81647dcfeeb993329bfb039&language=en-US&page=1&include_adult=false
+    [2] Me fijo qué tengo que proveerle a este endpoint; en este caso me solicita el query:
+        https://api.themoviedb.org/3/search/movie?api_key=6b6d4a8dd81647dcfeeb993329bfb039&language=en-US&page=1&include_adult=false&query=
+        [*] Para proveer el valor del query voy a tener que hacer una Query String dinámica más adelante
+    [3] Importo el useEffect y useState:
+        import { useEffect, useState } from 'react';
+    [4] Voy a tener que crear un Estado; para eso, declaro un array constante, con una variable que sea el dato y otra que sirva para setearlo, y le doy como valor un array vacío a través del useState
+        const [moviesResult, setMoviesResult] = useState([]);
+    [5] *Llamado a la API*: 
+        [1] Lo hago a través de axios, así que importo la librería:
+            import axios from 'axios';
+        [2] Creo una función useEffect
+        [3] Dentro declaro una variable endPoint a la cual le doy como valor el URL del enpoint que me da la API:
+            useEffect(() => {
+                const endPoint = 'https://api.themoviedb.org/3/search/movie?api_key=6b6d4a8dd81647dcfeeb993329bfb039&language=es-ES&page=1&include_adult=false&query='
+            }, [])
+            [*] Tengo que asignarle valor a [&query=]; esta tiene que tener como valor la keyword de la búsqueda, así que simplemente tengo que pasarla como parámetro (ya la había capturado en una constante) y cambiar '' x ``:
+                `&query=${keyword}`
+        [4] Llamo a la librería axios para pasarle el endpoint y pedir la respuesta:
+            axios.get(endPoint)    
+            .then(response => {
+                const resultArray = response.data;
+                console.log(resultArray)
+            })
+            .catch(error => {
+                swAlert(<h2>Hubo errores.<br/> Intenta más tarde</h2>);
+            })
+            [*] De la respuesta del endpoint lo que me interesa es .results; lo agrego:
+                const resultArray = response.data.results;
+            [*] Reemplazo el console.log() x setMoviesResult(resultArray);
+
+**MANEJO DE LA INFORMACIÓN**
+Reutilizo todo el <div "row"/> del comonente Listado.js
+    [*] Puedo cambiar algunas cosas de Bootstrap; por ej, la cantidad de columnas para que no se vea igual a Listado
+    *Manejo de errores*: si escribiera algo que no me devuelve ningún resultado, puedo hacer una alerta. Para esto uso un IF:
+        
+
